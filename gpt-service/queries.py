@@ -41,7 +41,7 @@ def get_guess_word_content(guessed_word):
     content = (f"We play guessing game. The given word is {guessed_word}. I send you a question and you "
                f"should answer only the one word with nothing else. If my question is related to guessed "
                f"word, answer something in agreement. If my question is not related to guessed word answer "
-               f"something denial. If I guessed the"
+               f"something in denial. If I guessed the"
                f"word then answer 'done' and only in this format, for example, if i wrote question with this "
                f"word or synonym. If you"
                f"dont know answer that you don't know")
