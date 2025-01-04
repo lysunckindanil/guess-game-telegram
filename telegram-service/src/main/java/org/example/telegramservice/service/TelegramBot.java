@@ -29,8 +29,8 @@ public class TelegramBot implements SpringLongPollingBot, LongPollingSingleThrea
         // We check if the update has a message and the message has text
         if (update.hasMessage() && update.getMessage().hasText()) {
             // Set variables
-            String message_text = gameService.sendRequest(update.getMessage().getText());
             long chat_id = update.getMessage().getChatId();
+            String message_text = gameService.sendRequest(update.getMessage().getText(), chat_id);
 
             SendMessage message = SendMessage // Create a message object
                     .builder()
