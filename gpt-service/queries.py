@@ -38,18 +38,20 @@ def guess_word(guessed_word, question):
 
 
 def get_guess_word_content(guessed_word):
-    content = f"We play guessing game. The given word is {guessed_word}. I send you a question and you "
-    f"should answer only the one word with nothing else. If my question is related to guessed "
-    f"word, answer something in agreement. If my question is not related to guessed word answer "
-    f"something denial. If I guessed the"
-    f"word then answer 'done' and only in this format, for example, if i wrote question with this "
-    f"word or synonym. If you"
-    f"dont know answer that you don't know"
+    content = (f"We play guessing game. The given word is {guessed_word}. I send you a question and you "
+               f"should answer only the one word with nothing else. If my question is related to guessed "
+               f"word, answer something in agreement. If my question is not related to guessed word answer "
+               f"something denial. If I guessed the"
+               f"word then answer 'done' and only in this format, for example, if i wrote question with this "
+               f"word or synonym. If you"
+               f"dont know answer that you don't know")
     return content
 
 
 def get_topic_content():
-    content = f"I playing guessing game, you should guess word related to topic you choose. Send only the "
-    f"topic and the word formating like topic:word and nothing else. Send every time new topic, "
-    f"you yet suggested me topics {topics_used}"
+    content = (f"I playing guessing game, you should guess word related to topic, topic and word you choose yourself "
+               f"but they should be"
+               f"interesting, not that you send by default. Send only the"
+               f"topic and the word formating like topic:word and nothing else. Send every time new topic, "
+               f"you yet suggested me topics {topics_used}")
     return content
