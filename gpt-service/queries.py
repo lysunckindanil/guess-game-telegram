@@ -15,7 +15,7 @@ def choose_topic():
         store=False,
         messages=[
             {"role": "user",
-             "content": f"I playing guessing game, you should guess word related to topic you choose. Send only the topic and the word formating like topic:word and nothing else. Send every time new topic, you yet suggested me topics {topics_used}"}
+             "content": get_topic_content()}
         ]
     )
     result = completion.choices[0].message.content.split(":")
@@ -29,9 +29,27 @@ def guess_word(guessed_word, question):
         store=False,
         messages=[
             {"role": "system",
-             "content": f"We play guessing game. The given word is {guessed_word}. I send you a question and you should answer only the one word with nothing else. If my question is related to guessed word, answer yes. If my question is not related to guessed word answer no. If I guessed the word then answer done, for example, if i wrote question with this word or synonym. If you dont know answer skip"},
+             "content": get_guess_word_content(guessed_word)},
             {"role": "user",
              "content": question}
         ]
     )
     return completion.choices[0].message.content
+
+
+def get_guess_word_content(guessed_word):
+    content = f"We play guessing game. The given word is {guessed_word}. I send you a question and you "
+    f"should answer only the one word with nothing else. If my question is related to guessed "
+    f"word, answer something in agreement. If my question is not related to guessed word answer "
+    f"something denial. If I guessed the"
+    f"word then answer 'done' and only in this format, for example, if i wrote question with this "
+    f"word or synonym. If you"
+    f"dont know answer that you don't know"
+    return content
+
+
+def get_topic_content():
+    content = f"I playing guessing game, you should guess word related to topic you choose. Send only the "
+    f"topic and the word formating like topic:word and nothing else. Send every time new topic, "
+    f"you yet suggested me topics {topics_used}"
+    return content
