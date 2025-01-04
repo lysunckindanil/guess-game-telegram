@@ -2,7 +2,6 @@ package org.example.telegramservice.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.example.telegramservice.config.BotConfig;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.client.okhttp.OkHttpTelegramClient;
 import org.telegram.telegrambots.longpolling.interfaces.LongPollingUpdateConsumer;
