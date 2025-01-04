@@ -9,7 +9,7 @@ import org.springframework.web.client.RestTemplate;
 @RequiredArgsConstructor
 public class GameService {
     private final RestTemplate restTemplate;
-    private final String url = "https://game-service/api/handle-message";
+    private final String url = "http://game-service/api/handle-message";
 
     public String sendRequest(String message, long chat_id) {
         TelegramMessageEntity entity = new TelegramMessageEntity();
