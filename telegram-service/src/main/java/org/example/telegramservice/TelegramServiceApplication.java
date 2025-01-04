@@ -14,8 +14,8 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 @EnableDiscoveryClient
 public class TelegramServiceApplication {
 
-    public static void main(String[] args) throws TelegramApiException {
-        ApplicationContext ctx = SpringApplication.run(TelegramServiceApplication.class, args);
+    public static void main(String[] args) {
+        SpringApplication.run(TelegramServiceApplication.class, args);
     }
 
     @LoadBalanced
