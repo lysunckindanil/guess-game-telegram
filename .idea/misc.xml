@@ -3,6 +3,11 @@
   <component name="Black">
     <option name="sdkName" value="Python 3.11 (gpt-service)" />
   </component>
+  <component name="EntryPointsManager">
+    <writeAnnotations>
+      <writeAnnotation name="org.springframework.test.context.bean.override.mockito.MockitoBean" />
+    </writeAnnotations>
+  </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="MavenProjectsManager">
     <option name="originalFiles">

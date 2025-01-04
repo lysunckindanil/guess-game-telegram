@@ -6,4 +6,5 @@ import lombok.Data;
 public class GuessedWordEntity {
     String topic;
     String word;
+    String error;
 }
