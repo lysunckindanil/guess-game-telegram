@@ -39,3 +39,4 @@ build/
 .DS_Store
 
 application.properties
+guess_gpt_game_bot
