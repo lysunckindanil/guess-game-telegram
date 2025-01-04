@@ -1,6 +1,8 @@
 package org.example.telegramservice.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.example.telegramservice.config.BotConfig;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.client.okhttp.OkHttpTelegramClient;
 import org.telegram.telegrambots.longpolling.interfaces.LongPollingUpdateConsumer;
@@ -22,16 +24,17 @@ import java.util.List;
 public class TelegramBot implements SpringLongPollingBot, LongPollingSingleThreadUpdateConsumer {
     private final TelegramClient telegramClient;
     private final GameService gameService;
+    private final BotConfig botConfig;
 
-    public TelegramBot(GameService gameService) throws TelegramApiException {
+    public TelegramBot(GameService gameService, BotConfig botConfig) throws TelegramApiException {
         this.gameService = gameService;
-        telegramClient = new OkHttpTelegramClient(getBotToken());
+        this.botConfig = botConfig;
+        telegramClient = new OkHttpTelegramClient(botConfig.getToken());
         BotCommand command1 = BotCommand.builder().command("/play").description("to start playing").build();
         BotCommand command2 = BotCommand.builder().command("/stop").description("to see the guessed word").build();
         List<BotCommand> LIST_OF_COMMANDS = List.of(command1, command2);
         telegramClient.execute(new SetMyCommands(LIST_OF_COMMANDS, new BotCommandScopeDefault(), null));
     }
-
 
     @Override
     public void consume(Update update) {
@@ -55,7 +58,7 @@ public class TelegramBot implements SpringLongPollingBot, LongPollingSingleThrea
 
     @Override
     public String getBotToken() {
-        return "7878222090:AAEND1MXpKLpFwOiJQ1hukkMcaW4PsSR3DE";
+        return this.botConfig.getToken();
     }
 
     @Override

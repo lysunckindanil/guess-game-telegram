@@ -14,6 +14,14 @@ public class GameService {
     Map<Long, String> users_words = new HashMap<>();
 
     public String handleMessage(String message, long chat_id) {
+        if (message.equals("/start")) {
+            return """
+                    It's a guess game, bot suggests you a topic and you should guess a word
+                    You can ask questions and bot answers yes/no
+                    Type /play to start game
+                    Type /stop if you give up
+                    """;
+        }
         if (users_words.containsKey(chat_id)) {
             if (message.equals("/stop")) {
                 String word = users_words.get(chat_id);
@@ -21,10 +29,10 @@ public class GameService {
                 return "Your word is " + word;
             } else {
                 String response = gptService.guessWord(users_words.get(chat_id), message);
-                if (response.equals("done")){
+                if (response.equals("done")) {
                     String word = users_words.get(chat_id);
                     users_words.remove(chat_id);
-                    return "Your word is " + word;
+                    return "Congrats! Your word is " + word;
                 }
                 return response;
             }
