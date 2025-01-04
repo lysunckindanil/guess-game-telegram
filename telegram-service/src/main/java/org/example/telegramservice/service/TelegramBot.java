@@ -1,54 +1,58 @@
 package org.example.telegramservice.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.telegramservice.config.BotConfig;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.bots.TelegramLongPollingBot;
-import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
+import org.telegram.telegrambots.client.okhttp.OkHttpTelegramClient;
+import org.telegram.telegrambots.longpolling.interfaces.LongPollingUpdateConsumer;
+import org.telegram.telegrambots.longpolling.starter.SpringLongPollingBot;
+import org.telegram.telegrambots.longpolling.util.LongPollingSingleThreadUpdateConsumer;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
-import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScopeDefault;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-
-import java.util.*;
+import org.telegram.telegrambots.meta.generics.TelegramClient;
 
 
 @Component
 @Slf4j
-public class TelegramBot extends TelegramLongPollingBot {
-    BotConfig config;
+public class TelegramBot implements SpringLongPollingBot, LongPollingSingleThreadUpdateConsumer {
+    private final TelegramClient telegramClient;
+    private final GameService gameService;
 
-    @Autowired
-    public TelegramBot(BotConfig config) {
-        super(config.getToken());
+    public TelegramBot(GameService gameService) {
+        this.gameService = gameService;
+        telegramClient = new OkHttpTelegramClient(getBotToken());
     }
 
+
     @Override
-    public void onUpdateReceived(Update update) {
+    public void consume(Update update) {
+        // We check if the update has a message and the message has text
         if (update.hasMessage() && update.getMessage().hasText()) {
-            String messageText = update.getMessage().getText();
-            long chatId = update.getMessage().getChatId();
-            sendMessage(chatId, messageText);
-        }
-    }
+            // Set variables
+            String message_text = gameService.sendRequest(update.getMessage().getText());
+            long chat_id = update.getMessage().getChatId();
 
-
-    public void sendMessage(long chatId, String text) {
-        SendMessage message = new SendMessage();
-        message.setChatId(String.valueOf(chatId));
-        message.setText(text);
-        try {
-            execute(message);
-        } catch (TelegramApiException exception) {
-            log.error("Unable to send message");
+            SendMessage message = SendMessage // Create a message object
+                    .builder()
+                    .chatId(chat_id)
+                    .text(message_text)
+                    .build();
+            try {
+                telegramClient.execute(message); // Sending our message object to user
+            } catch (TelegramApiException ignored) {
+            }
         }
     }
 
     @Override
-    public String getBotUsername() {
-        return config.getName();
+    public String getBotToken() {
+        return "7878222090:AAEND1MXpKLpFwOiJQ1hukkMcaW4PsSR3DE";
+    }
+
+    @Override
+    public LongPollingUpdateConsumer getUpdatesConsumer() {
+        return this;
     }
 }
