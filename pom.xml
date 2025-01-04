@@ -16,6 +16,7 @@
 
     <modules>
         <module>eureka-server</module>
+        <module>config-server</module>
         <module>telegram-service</module>
         <module>game-service</module>
     </modules>
