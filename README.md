@@ -20,7 +20,7 @@ Game service
 - config from config-server
 - logic for getting topics & words or exceptions from the GPT service
 - logic for playing a guessing game (for example, tracing whether the user has guessed the word or not, etc.)
-- sessions are stored inside service for convenience, should be in database or special service
+- sessions' data are stored PostgreSQL
 
 Telegram service
 
