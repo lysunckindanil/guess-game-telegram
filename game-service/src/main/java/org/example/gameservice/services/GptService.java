@@ -1,7 +1,7 @@
 package org.example.gameservice.services;
 
 import lombok.RequiredArgsConstructor;
-import org.example.gameservice.http.GuessedWordEntity;
+import org.example.gameservice.dto.GuessedWordDto;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -13,8 +13,8 @@ public class GptService {
     private final String guess_word_url = "http://gpt-service/api/guess-word?word=%s&question=%s";
     private final String choose_topic_url = "http://gpt-service/api/topics/choose";
 
-    public GuessedWordEntity getChosenWord() {
-        return restTemplate.getForObject(choose_topic_url, GuessedWordEntity.class);
+    public GuessedWordDto getChosenWord() {
+        return restTemplate.getForObject(choose_topic_url, GuessedWordDto.class);
     }
 
     public String guessWord(String word, String question) {

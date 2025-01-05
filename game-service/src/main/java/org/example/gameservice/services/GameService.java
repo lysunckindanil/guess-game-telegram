@@ -2,7 +2,7 @@ package org.example.gameservice.services;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.example.gameservice.http.GuessedWordEntity;
+import org.example.gameservice.dto.GuessedWordDto;
 import org.springframework.stereotype.Service;
 
 @Getter
@@ -43,7 +43,7 @@ public class GameService {
     }
 
     private String play(long chat_id) {
-        GuessedWordEntity entity = gptService.getChosenWord();
+        GuessedWordDto entity = gptService.getChosenWord();
         if (entity.getError() != null) {
             return entity.getError();
         } else {

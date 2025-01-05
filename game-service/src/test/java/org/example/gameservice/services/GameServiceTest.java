@@ -1,6 +1,6 @@
 package org.example.gameservice.services;
 
-import org.example.gameservice.http.GuessedWordEntity;
+import org.example.gameservice.dto.GuessedWordDto;
 import org.example.gameservice.repo.GameSessionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,7 +26,7 @@ class GameServiceTest {
     private final GameSessionRepository gameSessionRepository;
     private final GptService gptService;
 
-    private GuessedWordEntity guessedWordEntity;
+    private GuessedWordDto guessedWordDto;
     long chat_id = 1L;
 
     @Autowired
@@ -40,10 +40,10 @@ class GameServiceTest {
 
     @BeforeEach
     public void setUp() {
-        guessedWordEntity = new GuessedWordEntity();
-        guessedWordEntity.setWord("word");
-        guessedWordEntity.setTopic("topic");
-        Mockito.when(gptService.getChosenWord()).thenReturn(guessedWordEntity);
+        guessedWordDto = new GuessedWordDto();
+        guessedWordDto.setWord("word");
+        guessedWordDto.setTopic("topic");
+        Mockito.when(gptService.getChosenWord()).thenReturn(guessedWordDto);
     }
 
     @Test
@@ -54,19 +54,19 @@ class GameServiceTest {
 
     @Test
     void handleMessage_Play_ReturnsTopic() {
-        assertEquals(gameService.handleMessage("/play", chat_id), "Your topic is " + guessedWordEntity.getTopic());
+        assertEquals(gameService.handleMessage("/play", chat_id), "Your topic is " + guessedWordDto.getTopic());
     }
 
     @Test
     void handleMessage_PlayWithErrorResponse_ReturnError() {
-        guessedWordEntity.setError("error");
+        guessedWordDto.setError("error");
         gameService.handleMessage("/play", chat_id);
         assertEquals(gameService.handleMessage("/play", chat_id), "error");
     }
 
     @Test
     void handleMessage_PlayWithErrorResponse_DontAddToRepo() {
-        guessedWordEntity.setError("error");
+        guessedWordDto.setError("error");
         gameService.handleMessage("/play", chat_id);
         assertThat(gameService.getWords_repo().size()).isEqualTo(0);
     }
@@ -82,14 +82,14 @@ class GameServiceTest {
     @Test
     void handleMessage_Stop_ReturnsGuessedWord() {
         gameService.handleMessage("/play", chat_id);
-        assertEquals(gameService.handleMessage("/stop", chat_id), "Your word is " + guessedWordEntity.getWord());
+        assertEquals(gameService.handleMessage("/stop", chat_id), "Your word is " + guessedWordDto.getWord());
     }
 
     @Test
     void handleMessage_GuessDone_ReturnsThatWordGuessed() {
         gameService.handleMessage("/play", chat_id);
         Mockito.when(gptService.guessWord(any(), any())).thenReturn("done");
-        assertEquals(gameService.handleMessage("question_done", chat_id), "Congrats! Your word is " + guessedWordEntity.getWord());
+        assertEquals(gameService.handleMessage("question_done", chat_id), "Congrats! Your word is " + guessedWordDto.getWord());
     }
 
     @Test

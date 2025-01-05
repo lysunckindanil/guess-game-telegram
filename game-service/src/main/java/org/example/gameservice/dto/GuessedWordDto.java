@@ -1,9 +1,9 @@
-package org.example.gameservice.http;
+package org.example.gameservice.dto;
 
 import lombok.Data;
 
 @Data
-public class GuessedWordEntity {
+public class GuessedWordDto {
     String topic;
     String word;
     String error;

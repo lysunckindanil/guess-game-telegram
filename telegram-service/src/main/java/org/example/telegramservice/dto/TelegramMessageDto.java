@@ -1,9 +1,9 @@
-package org.example.telegramservice.entities;
+package org.example.telegramservice.dto;
 
 import lombok.Data;
 
 @Data
-public class TelegramMessageEntity {
+public class TelegramMessageDto {
     private String message;
     private long chat_id;
 }

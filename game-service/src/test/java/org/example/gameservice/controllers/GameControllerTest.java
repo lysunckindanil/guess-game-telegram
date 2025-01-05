@@ -1,7 +1,7 @@
 package org.example.gameservice.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.example.gameservice.http.TelegramMessageEntity;
+import org.example.gameservice.dto.TelegramMessageDto;
 import org.example.gameservice.services.GameService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,20 +32,20 @@ class GameControllerTest {
     @MockitoBean
     private GameService gameService;
 
-    private TelegramMessageEntity telegramMessageEntity;
+    private TelegramMessageDto telegramMessageDto;
 
 
     @BeforeEach
     public void setUp() {
-        telegramMessageEntity = new TelegramMessageEntity();
-        telegramMessageEntity.setChat_id(1L);
-        telegramMessageEntity.setMessage("message");
+        telegramMessageDto = new TelegramMessageDto();
+        telegramMessageDto.setChat_id(1L);
+        telegramMessageDto.setMessage("message");
     }
 
     @Test
     public void handleMessage_ReturnSuccessAndResult() throws Exception {
         when(gameService.handleMessage(anyString(), anyLong())).thenReturn("string");
-        ResultActions response = mockMvc.perform(post("/api/handle-message").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(telegramMessageEntity)));
+        ResultActions response = mockMvc.perform(post("/api/handle-message").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(telegramMessageDto)));
         response.andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
                 .andExpect(MockMvcResultMatchers.content().string("string"));
     }

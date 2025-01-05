@@ -1,11 +1,11 @@
-package org.example.gameservice.http;
+package org.example.gameservice.dto;
 
 import lombok.Data;
 import lombok.ToString;
 
 @Data
 @ToString
-public class TelegramMessageEntity {
+public class TelegramMessageDto {
     String message;
     long chat_id;
 }
