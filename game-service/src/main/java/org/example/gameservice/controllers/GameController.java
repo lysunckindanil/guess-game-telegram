@@ -1,7 +1,7 @@
 package org.example.gameservice.controllers;
 
 import lombok.RequiredArgsConstructor;
-import org.example.gameservice.entities.TelegramMessageEntity;
+import org.example.gameservice.http.TelegramMessageEntity;
 import org.example.gameservice.services.GameService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

@@ -1,6 +1,6 @@
 package org.example.gameservice.services;
 
-import org.example.gameservice.entities.GuessedWordEntity;
+import org.example.gameservice.http.GuessedWordEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

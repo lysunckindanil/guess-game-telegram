@@ -1,7 +1,7 @@
 package org.example.gameservice.services;
 
 import lombok.RequiredArgsConstructor;
-import org.example.gameservice.entities.GuessedWordEntity;
+import org.example.gameservice.http.GuessedWordEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 

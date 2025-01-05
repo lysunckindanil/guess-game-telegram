@@ -1,4 +1,4 @@
-package org.example.gameservice.entities;
+package org.example.gameservice.http;
 
 import lombok.Data;
 import lombok.ToString;

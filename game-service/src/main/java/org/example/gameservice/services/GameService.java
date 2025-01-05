@@ -2,18 +2,15 @@ package org.example.gameservice.services;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.example.gameservice.entities.GuessedWordEntity;
+import org.example.gameservice.http.GuessedWordEntity;
 import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Getter
 @Service
 @RequiredArgsConstructor
 public class GameService {
     private final GptService gptService;
-    private final Map<Long, String> words_repo = new HashMap<>();
+    private final GameSessionService words_repo;
 
     public String handleMessage(String message, long chat_id) {
         boolean exists = words_repo.containsKey(chat_id);
