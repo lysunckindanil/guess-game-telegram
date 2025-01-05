@@ -43,9 +43,10 @@ class GameControllerTest {
     }
 
     @Test
-    public void handleMessage_ReturnSuccess() throws Exception {
+    public void handleMessage_ReturnSuccessAndResult() throws Exception {
         when(gameService.handleMessage(anyString(), anyLong())).thenReturn("string");
         ResultActions response = mockMvc.perform(post("/api/handle-message").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(telegramMessageEntity)));
-        response.andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
+        response.andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
+                .andExpect(MockMvcResultMatchers.content().string("string"));
     }
 }
