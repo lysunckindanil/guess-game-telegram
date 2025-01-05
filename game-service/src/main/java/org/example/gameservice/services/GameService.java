@@ -13,22 +13,22 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class GameService {
     private final GptService gptService;
-    private final Map<Long, String> users_words = new HashMap<>();
+    private final Map<Long, String> words_repo = new HashMap<>();
 
     public String handleMessage(String message, long chat_id) {
+        boolean exists = words_repo.containsKey(chat_id);
         if (message.equals("/start")) {
             return start();
         }
-        if (users_words.containsKey(chat_id) && message.equals("/stop")) {
+        if (exists && message.equals("/stop")) {
             return stop(chat_id);
         }
-        if (users_words.containsKey(chat_id)) {
+        if (exists) {
             return handleGptRequest(message, chat_id);
         }
-        if (!users_words.containsKey(chat_id) && message.equals("/play")) {
+        if (message.equals("/play")) {
             return play(chat_id);
         }
-
         return "I don't understand you";
     }
 
@@ -42,8 +42,8 @@ public class GameService {
     }
 
     private String stop(long chat_id) {
-        String word = users_words.get(chat_id);
-        users_words.remove(chat_id);
+        String word = words_repo.get(chat_id);
+        words_repo.remove(chat_id);
         return "Your word is " + word;
     }
 
@@ -52,16 +52,16 @@ public class GameService {
         if (entity.getError() != null) {
             return entity.getError();
         } else {
-            users_words.put(chat_id, entity.getWord());
+            words_repo.put(chat_id, entity.getWord());
             return "Your topic is " + entity.getTopic();
         }
     }
 
     private String handleGptRequest(String message, long chat_id) {
-        String response = gptService.guessWord(users_words.get(chat_id), message);
+        String response = gptService.guessWord(words_repo.get(chat_id), message);
         if (response.equals("done")) {
-            String word = users_words.get(chat_id);
-            users_words.remove(chat_id);
+            String word = words_repo.get(chat_id);
+            words_repo.remove(chat_id);
             return "Congrats! Your word is " + word;
         }
         return response;
