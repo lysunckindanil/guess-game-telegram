@@ -26,7 +26,7 @@ public class GameService {
         if (message.equals("/play")) {
             return play(chat_id);
         }
-        return "I don't understand you";
+        return "I don't understand you. Click /start to see my commands!";
     }
 
     private String start() {

@@ -26,6 +26,11 @@
           <option value="game-service" />
           <option value="game-service" />
           <option value="game-service" />
+          <option value="eureka-server" />
+          <option value="eureka-server" />
+          <option value="eureka-server" />
+          <option value="config-server" />
+          <option value="config-server" />
         </list>
       </option>
       <option name="ignoredPackages">
@@ -37,10 +42,20 @@
           <option value="ch.qos.logback:logback-core:1.5.12" />
           <option value="com.thoughtworks.xstream:xstream:1.4.20" />
           <option value="org.apache.httpcomponents:httpclient:4.5.3" />
+          <option value="com.thoughtworks.xstream:xstream:1.4.20" />
+          <option value="org.apache.httpcomponents:httpclient:4.5.3" />
+          <option value="ch.qos.logback:logback-core:1.5.12" />
+          <option value="com.thoughtworks.xstream:xstream:1.4.20" />
+          <option value="ch.qos.logback:logback-core:1.5.12" />
         </list>
       </option>
       <option name="ignoredReasons">
         <list>
+          <option value="Not exploitable" />
+          <option value="Not exploitable" />
+          <option value="Not exploitable" />
+          <option value="Not exploitable" />
+          <option value="Not exploitable" />
           <option value="Not exploitable" />
           <option value="Not exploitable" />
           <option value="Not exploitable" />
