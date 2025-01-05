@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.gameservice.entity.GameSessionEntity;
 import org.example.gameservice.repo.GameSessionRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.Map;
@@ -58,11 +59,12 @@ public class GameSessionService implements Map<Long, String> {
         return word;
     }
 
+    @Transactional
     @Override
     public String remove(Object chat_id) {
         if (chat_id instanceof Long id) {
             String word = gameSessionRepository.getByChatId(id).getWord();
-            gameSessionRepository.deleteById(id);
+            gameSessionRepository.deleteByChatId(id);
             return word;
         }
         throw new IllegalArgumentException();

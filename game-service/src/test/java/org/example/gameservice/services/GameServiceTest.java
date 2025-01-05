@@ -1,13 +1,16 @@
 package org.example.gameservice.services;
 
 import org.example.gameservice.http.GuessedWordEntity;
+import org.example.gameservice.repo.GameSessionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -15,15 +18,25 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 
 @ExtendWith(MockitoExtension.class)
+@DataJpaTest
+@AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
 class GameServiceTest {
-    @Mock
-    private GptService gptService;
 
-    @InjectMocks
-    private GameService gameService;
+    private final GameService gameService;
+    private final GameSessionRepository gameSessionRepository;
+    private final GptService gptService;
 
     private GuessedWordEntity guessedWordEntity;
     long chat_id = 1L;
+
+    @Autowired
+    GameServiceTest(GameSessionRepository gameSessionRepository) {
+        gptService = Mockito.mock(GptService.class);
+        this.gameSessionRepository = gameSessionRepository;
+        this.gameService = new GameService(gptService, new GameSessionService(gameSessionRepository));
+
+    }
+
 
     @BeforeEach
     public void setUp() {
@@ -36,7 +49,7 @@ class GameServiceTest {
     @Test
     void handleMessage_Play_AddToRepo() {
         gameService.handleMessage("/play", chat_id);
-        assertThat(gameService.getWords_repo()).isNotEmpty();
+        assertThat(gameService.getWords_repo().size()).isEqualTo(1);
     }
 
     @Test
@@ -55,7 +68,7 @@ class GameServiceTest {
     void handleMessage_PlayWithErrorResponse_DontAddToRepo() {
         guessedWordEntity.setError("error");
         gameService.handleMessage("/play", chat_id);
-        assertThat(gameService.getWords_repo()).isEmpty();
+        assertThat(gameService.getWords_repo().size()).isEqualTo(0);
     }
 
 
@@ -63,7 +76,7 @@ class GameServiceTest {
     void handleMessage_Stop_DeletesFromRepo() {
         gameService.handleMessage("/play", chat_id);
         gameService.handleMessage("/stop", chat_id);
-        assertThat(gameService.getWords_repo()).isEmpty();
+        assertThat(gameService.getWords_repo().size()).isEqualTo(0);
     }
 
     @Test
@@ -84,7 +97,7 @@ class GameServiceTest {
         gameService.handleMessage("/play", chat_id);
         Mockito.when(gptService.guessWord(any(), any())).thenReturn("done");
         gameService.handleMessage("question_done", chat_id);
-        assertThat(gameService.getWords_repo()).isEmpty();
+        assertThat(gameService.getWords_repo().size()).isEqualTo(0);
     }
 
     @Test
@@ -99,6 +112,6 @@ class GameServiceTest {
         gameService.handleMessage("/play", chat_id);
         Mockito.when(gptService.guessWord(anyString(), anyString())).thenReturn("answer");
         gameService.handleMessage("question", chat_id);
-        assertThat(gameService.getWords_repo()).isNotEmpty();
+        assertThat(gameService.getWords_repo().size()).isEqualTo(1);
     }
 }

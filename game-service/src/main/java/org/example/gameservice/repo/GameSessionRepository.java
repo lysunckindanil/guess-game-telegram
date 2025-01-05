@@ -11,4 +11,5 @@ public interface GameSessionRepository extends JpaRepository<GameSessionEntity, 
     boolean existsByChatId(Long chatId);
 
     GameSessionEntity getByChatId(Long chatId);
+    void deleteByChatId(Long chatId);
 }

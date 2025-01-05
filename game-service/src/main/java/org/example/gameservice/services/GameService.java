@@ -39,9 +39,7 @@ public class GameService {
     }
 
     private String stop(long chat_id) {
-        String word = words_repo.get(chat_id);
-        words_repo.remove(chat_id);
-        return "Your word is " + word;
+        return "Your word is " + words_repo.remove(chat_id);
     }
 
     private String play(long chat_id) {
