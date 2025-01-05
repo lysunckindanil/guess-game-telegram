@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class TelegramMessageEntity {
-    String message;
-    long chat_id;
+    private String message;
+    private long chat_id;
 }
