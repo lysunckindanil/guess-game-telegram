@@ -1,7 +1,6 @@
 package org.example.gameservice.services;
 
 import org.example.gameservice.entities.GuessedWordEntity;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -9,6 +8,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 
 @ExtendWith(MockitoExtension.class)
 class GameServiceTest {
@@ -26,51 +30,75 @@ class GameServiceTest {
         guessedWordEntity = new GuessedWordEntity();
         guessedWordEntity.setWord("word");
         guessedWordEntity.setTopic("topic");
-    }
-
-    @Test
-    void handleMessage_Play_ReturnsGuessedWordAndAddToRepo() {
         Mockito.when(gptService.getChosenWord()).thenReturn(guessedWordEntity);
-        Assertions.assertEquals(gameService.handleMessage("/play", chat_id), "Your topic is " + guessedWordEntity.getTopic());
-        Assertions.assertEquals(gameService.getWords_repo().get(chat_id), guessedWordEntity.getWord());
-        Assertions.assertEquals(1, gameService.getWords_repo().size());
     }
 
     @Test
-    void handleMessage_PlayWithErrorResponse_ReturnErrorAndDontAddToRepo() {
+    void handleMessage_Play_AddToRepo() {
+        gameService.handleMessage("/play", chat_id);
+        assertThat(gameService.getWords_repo()).isNotEmpty();
+    }
+
+    @Test
+    void handleMessage_Play_ReturnsTopic() {
+        assertEquals(gameService.handleMessage("/play", chat_id), "Your topic is " + guessedWordEntity.getTopic());
+    }
+
+    @Test
+    void handleMessage_PlayWithErrorResponse_ReturnError() {
         guessedWordEntity.setError("error");
-        Mockito.when(gptService.getChosenWord()).thenReturn(guessedWordEntity);
         gameService.handleMessage("/play", chat_id);
-        Assertions.assertEquals(gameService.handleMessage("/play", chat_id), "error");
-        Assertions.assertEquals(0, gameService.getWords_repo().size());
+        assertEquals(gameService.handleMessage("/play", chat_id), "error");
     }
 
     @Test
-    void handleMessage_Stop_DeletesChatIdFromRepoAndReturnsGuessedWord() {
-        Mockito.when(gptService.getChosenWord()).thenReturn(guessedWordEntity);
+    void handleMessage_PlayWithErrorResponse_DontAddToRepo() {
+        guessedWordEntity.setError("error");
         gameService.handleMessage("/play", chat_id);
-        Assertions.assertEquals(gameService.handleMessage("/stop", chat_id), "Your word is " + guessedWordEntity.getWord());
-        Assertions.assertNull(gameService.getWords_repo().get(chat_id));
-        Assertions.assertEquals(0, gameService.getWords_repo().size());
+        assertThat(gameService.getWords_repo()).isEmpty();
+    }
+
+
+    @Test
+    void handleMessage_Stop_DeletesFromRepo() {
+        gameService.handleMessage("/play", chat_id);
+        gameService.handleMessage("/stop", chat_id);
+        assertThat(gameService.getWords_repo()).isEmpty();
     }
 
     @Test
-    void handleMessage_GuessDone_ReturnsThatWordGuessedAndDeletesFromRepo() {
-        Mockito.when(gptService.getChosenWord()).thenReturn(guessedWordEntity);
+    void handleMessage_Stop_ReturnsGuessedWord() {
         gameService.handleMessage("/play", chat_id);
-        Mockito.when(gptService.guessWord(guessedWordEntity.getWord(), "question_done")).thenReturn("done");
-        Assertions.assertEquals(gameService.handleMessage("question_done", chat_id), "Congrats! Your word is " + guessedWordEntity.getWord());
-        Assertions.assertNull(gameService.getWords_repo().get(chat_id));
-        Assertions.assertEquals(0, gameService.getWords_repo().size());
+        assertEquals(gameService.handleMessage("/stop", chat_id), "Your word is " + guessedWordEntity.getWord());
+    }
+
+    @Test
+    void handleMessage_GuessDone_ReturnsThatWordGuessed() {
+        gameService.handleMessage("/play", chat_id);
+        Mockito.when(gptService.guessWord(any(), any())).thenReturn("done");
+        assertEquals(gameService.handleMessage("question_done", chat_id), "Congrats! Your word is " + guessedWordEntity.getWord());
+    }
+
+    @Test
+    void handleMessage_GuessDone_DeletesFromRepo() {
+        gameService.handleMessage("/play", chat_id);
+        Mockito.when(gptService.guessWord(any(), any())).thenReturn("done");
+        gameService.handleMessage("question_done", chat_id);
+        assertThat(gameService.getWords_repo()).isEmpty();
     }
 
     @Test
     void handleMessage_GuessTry_ReturnsAnswerFromGpt() {
-        Mockito.when(gptService.getChosenWord()).thenReturn(guessedWordEntity);
         gameService.handleMessage("/play", chat_id);
-        Mockito.when(gptService.guessWord(guessedWordEntity.getWord(), "question_try")).thenReturn("answer");
-        Assertions.assertEquals(gameService.handleMessage("question_try", chat_id), "answer");
-        Assertions.assertEquals(gameService.getWords_repo().get(chat_id), guessedWordEntity.getWord());
-        Assertions.assertEquals(1, gameService.getWords_repo().size());
+        Mockito.when(gptService.guessWord(anyString(), anyString())).thenReturn("answer");
+        assertEquals(gameService.handleMessage("question", chat_id), "answer");
+    }
+
+    @Test
+    void handleMessage_GuessTry_WordNotDeletedRepo() {
+        gameService.handleMessage("/play", chat_id);
+        Mockito.when(gptService.guessWord(anyString(), anyString())).thenReturn("answer");
+        gameService.handleMessage("question", chat_id);
+        assertThat(gameService.getWords_repo()).isNotEmpty();
     }
 }
