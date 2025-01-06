@@ -29,7 +29,7 @@ services:
       POSTGRES_PASSWORD: bp4JSd7T3D5LzQmV
       POSTGRES_DB: guess_game_db
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres -d guess_game_db" ]
+      test: [ "CMD-SHELL", "pg_isready -U gen_user -d guess_game_db" ]
       interval: 30s
       timeout: 10s
       retries: 5
