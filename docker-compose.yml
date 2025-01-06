@@ -1,4 +1,9 @@
 services:
+  zipkin-service:
+    image: openzipkin/zipkin
+    ports:
+      - 9411:9411
+
   config-server:
     build: ./config-server
     healthcheck:
@@ -34,8 +39,6 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
-    ports:
-      - 5430:5432
 
   game-service:
     build: ./game-service
@@ -56,8 +59,3 @@ services:
     depends_on:
       eureka-server:
         condition: service_healthy
-
-  zipkin-service:
-    image: openzipkin/zipkin
-    ports:
-      - 9411:9411
