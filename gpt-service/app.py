@@ -20,6 +20,8 @@ def guess_word_req():
         return guess_word(request.args.get('word'), request.args.get("question"))
     except openai.RateLimitError as e:
         return json.loads(e.response.content)['error']['message']
+    except openai.PermissionDeniedError as e:
+        return jsonify({"topic": None, "word": None, "error": json.loads(e.response.content)['error']['message']})
 
 
 @app.route('/api/topics/choose')
@@ -28,6 +30,8 @@ def choose_topic_req():
         response = choose_topic()
         return jsonify({"topic": response[0], "word": response[1], "error": None})
     except openai.RateLimitError as e:
+        return jsonify({"topic": None, "word": None, "error": json.loads(e.response.content)['error']['message']})
+    except openai.PermissionDeniedError as e:
         return jsonify({"topic": None, "word": None, "error": json.loads(e.response.content)['error']['message']})
 
 
