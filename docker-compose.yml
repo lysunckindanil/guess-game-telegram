@@ -25,11 +25,11 @@ services:
   postgres:
     image: postgres:latest
     environment:
-      POSTGRES_USER: postgres
+      POSTGRES_USER: gen_user
       POSTGRES_PASSWORD: bp4JSd7T3D5LzQmV
       POSTGRES_DB: guess_game_db
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres_user -d postgres_db" ]
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d guess_game_db" ]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -37,7 +37,7 @@ services:
       - 5430:5432
 
   game-service:
-    build: ./service
+    build: ./game-service
     depends_on:
       eureka-server:
         condition: service_healthy
@@ -45,7 +45,7 @@ services:
         condition: service_healthy
 
   telegram-service:
-    build: ./service
+    build: ./telegram-service
     depends_on:
       eureka-server:
         condition: service_healthy

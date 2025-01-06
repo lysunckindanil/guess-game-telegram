@@ -8,7 +8,7 @@ from queries import *
 rest_port = 8050
 import py_eureka_client.eureka_client as eureka_client
 
-eureka_client.init(eureka_server="http://localhost:8761/eureka",
+eureka_client.init(eureka_server="http://eureka-server:8761/eureka",
                    app_name="gpt-service",
                    instance_port=rest_port)
 app = Flask(__name__)
