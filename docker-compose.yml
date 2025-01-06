@@ -30,6 +30,7 @@ services:
       POSTGRES_DB: guess_game_db
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U gen_user -d guess_game_db" ]
+      start_period: 20s
       interval: 30s
       timeout: 10s
       retries: 5
@@ -55,3 +56,8 @@ services:
     depends_on:
       eureka-server:
         condition: service_healthy
+
+  zipkin-service:
+    image: openzipkin/zipkin
+    ports:
+      - 9411:9411
