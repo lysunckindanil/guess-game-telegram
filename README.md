@@ -14,15 +14,15 @@ Gpt-service:
 - rest for communication with ChatGPT
 - logic for generating topics & words
 
-Game service
+Game-service
 
 - eureka-client
 - config from config-server
-- logic for getting topics & words or exceptions from the GPT service
+- logic for getting topics & words or exceptions from the Gpt-service
 - logic for playing a guessing game (for example, tracing whether the user has guessed the word or not, etc.)
 - sessions' data are stored PostgreSQL
 
-Telegram service
+Telegram-service
 
 - eureka-client
 - config from config-server
@@ -31,5 +31,5 @@ Telegram service
 
 There are realized as well:
 
-- ConfigServer 
-- EurekaServer
+- Zipkin
+- Docker compose
